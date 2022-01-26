@@ -1,7 +1,7 @@
 # Chinook DB
 # Requirements
 1. PostgresQL Setup
-    Follow this link to download the PostgresDB you would be using for this task: Setup PostgreSQL.
+    Follow this link to download the PostgresDB you would be using for this task: Setup [https://www.postgresqltutorial.com/install-postgresql/].
 3. DB setup
   In your DBMS:
 Create a new Postgres database with the name ChinookDB.
