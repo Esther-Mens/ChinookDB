@@ -1,11 +1,11 @@
 # Chinook DB
 # Requirements
 1. PostgresQL Setup
-    Follow this link to download the PostgresDB you would be using for this task: Setup [https://www.postgresqltutorial.com/install-postgresql/].
+    Follow this link to download the PostgresDB you would be using for this task: Setup [Link](https://www.postgresqltutorial.com/install-postgresql/).
 3. DB setup
   In your DBMS:
 Create a new Postgres database with the name ChinookDB.
-Use this link to download a script to create and populate the tables in Postgres.
+Use this [Click Here](https://drive.google.com/file/d/1nJNRYx_Gv9EhC6GIfMnrIsSKIgfoPYn2/view?usp=sharing)link to download a script to create and populate the tables in Postgres.
 ## The Chinnok Data Model
    The Chinook data model represents a digital media store, including tables for artists, albums, media tracks, invoices and customers.
 
