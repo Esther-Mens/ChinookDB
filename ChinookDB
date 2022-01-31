@@ -259,7 +259,7 @@ FROM
     GROUP BY "MediaType"
   )
 
-
+--A query that shows the number of tracks purchased in all invoices that contain more than one genre.
 SELECT Invoice.InvoiceId AS InvoiceNumber, SUM(InvoiceLine.Quantity) AS TrackCount, group_concat(DISTINCT Genre.Name) AS Genres, COUNT(DISTINCT Genre.Name) AS TotalGenres
  FROM Invoice
  JOIN InvoiceLine ON InvoiceLine.InvoiceId = Invoice.InvoiceId
