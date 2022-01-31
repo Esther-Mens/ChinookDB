@@ -258,3 +258,12 @@ FROM
     INNER JOIN "InvoiceLine" il on il."TrackId" = t."TrackId"
     GROUP BY "MediaType"
   )
+
+
+SELECT Invoice.InvoiceId AS InvoiceNumber, SUM(InvoiceLine.Quantity) AS TrackCount, group_concat(DISTINCT Genre.Name) AS Genres, COUNT(DISTINCT Genre.Name) AS TotalGenres
+ FROM Invoice
+ JOIN InvoiceLine ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+ JOIN Track ON Track.TrackId = InvoiceLine.TrackId
+ JOIN Genre ON Genre.GenreId = Track.GenreId
+ GROUP BY InvoiceNumber
+ HAVING TotalGenres > 1
