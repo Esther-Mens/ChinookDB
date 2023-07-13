@@ -1,269 +1,201 @@
-SELECT "AlbumId", "Title", "ArtistId"
-	FROM public."Album";
+-- The name and length (in seconds) of all tracks that have lengths between 50 and 70 seconds
+SELECT * FROM public."Track"
+ORDER BY "TrackId" ASC;
 
-__ The name and length (in seconds) of all tracks that have lengths between 50 and 70 seconds.
-SELECT 
-	"Name",
-	"Milliseconds"
-FROM public."Track"
+SELECT "Name","Milliseconds" FROM public."Track"
 WHERE "Milliseconds" BETWEEN 50000 AND 70000;
 
--- all the albums by artists with the word ‘black’ in their name. 	
-select *
-from "Album" al
-join "Artist" ar
-on ar."ArtistId" = al."AlbumId"
-where al."Title" LIKE '%Black%';
+-- all the albums by artists with the word ‘black’ in their name
+SELECT * from public."Album";
+SELECT * FROM public."Artist";
 
--- query showing a unique/distinct list of billing countries from the Invoice table.
-SELECT DISTINCT "BillingCountry"
-FROM "Invoice";
+SELECT * FROM "Album" al
+JOIN "Artist" ar 
+ON ar."ArtistId" = al."ArtistId"
+WHERE ar."Name" LIKE '%black%'
 
---the city with the highest sum total invoice.
+-- query showing a unique/distinct list of billing countries from the Invoice table
+SELECT DISTINCT "BillingCountry" FROM "Invoice";
+
+-- the city with the highest sum total invoice
 select "BillingCity",sum("Total") as invoice_totals from "Invoice"
-group by 1
+Group By 1
 order by 2 Desc
 limit 1;
 
---A table that lists each country and the number of customers in that country. 
-SELECT
-	"BillingCountry" AS "BillingCountry",
-	COUNT("BillingCountry") AS "Number of Invoices"
-FROM "Invoice"
-GROUP BY "BillingCountry"
-order by "Number of Invoices" DESC;
+-- A table that lists each country and the number of customers in that country
+SELECT "BillingCountry", COUNT ("CustomerId") FROM "Invoice"
+Group By "BillingCountry"
 
--- the top five customers in terms of sales i.e. find the five customers whose total combined invoice amounts are the highest. Give their name, CustomerId and total invoice amount. 
-SELECT 
-	CONCAT("FirstName",' ',"LastName") as "Name",
-	"Total",
-	Cu."CustomerId"
-FROM "Invoice" Inv
-JOIN "Customer" Cu
-ON Inv."CustomerId" = Cu."CustomerId"
+-- the top five customers in terms of sales i.e. find the five customers whose total combined invoice amounts are the highest. 
+-- Give their name, CustomerId and total invoice amount.
+SELECT CONCAT ("FirstName",' ', "LastName") AS "FullName",Inv."CustomerId", Inv."Total" FROM "Customer" Cus
+JOIN "Invoice" Inv
+ON Cus."CustomerId" = Inv."CustomerId"
 ORDER BY "Total" DESC
 LIMIT 5;
 
--- Find out the state-wise count of customerID and list the names of states with the count of customerID in decreasing order. Note:- do not include where states isnull value.
-SELECT 
-	"State",
-	COUNT("CustomerId") AS "NumberOfCustomers"
-FROM "Customer"
-WHERE "State" IS NOT NULL
+-- Find out the state-wise count of customerID and list the names of states with the count of customerID in decreasing order. 
+-- Do not include where states isnull value.
+SELECT "State", COUNT ("CustomerId") AS "Numberofcustomers" FROM "Customer"
+WHERE "State" IS NOT NULL 
 GROUP BY "State"
-ORDER BY "NumberOfCustomers" DESC;
+ORDER BY "Numberofcustomers" DESC
 
--- How many Invoices were there in 2009 and 2011?
-SELECT 
-	SUM("Total")
-FROM "Invoice"
-WHERE "InvoiceDate" BETWEEN '2009-01-01 00:00:00' AND '2011-01-01 00:00:00'
+-- How many Invoices were there in 2009 and 2011
+SELECT COUNT ("Total") FROM "Invoice"
+WHERE "InvoiceDate" BETWEEN '2009-01-01'AND '2011-01-01'
 
--- showing only the Employees who are Sales Agents.
-SELECT 
-	CONCAT("FirstName",' ',"LastName") AS CustomerName,
-	"Title"	
-FROM "Employee"
-WHERE "Title" LIKE '%Sales%';
+-- showing only the Employees who are Sales Agents
+SELECT CONCAT ("FirstName",' ',"LastName") AS "FullName","Title" FROM "Employee"
+WHERE "Title" = 'Sales Support Agent'
 
 -- What was the invoice date for invoice ID 315?
-SELECT 
-	"InvoiceDate",
-	"InvoiceId"
-FROM "Invoice"
-WHERE "InvoiceId" = '315';
+SELECT "InvoiceDate","InvoiceId" FROM "Invoice"
+WHERE "InvoiceId" = '315'
 
---all the invoices from the billing city Edmonton, and Vancouver and sort in descending order by invoice ID.
-SELECT 
-	"BillingCity",
-	"Total",
-	"InvoiceId"
-FROM "Invoice"
-WHERE "BillingCity" IN ('Edmonton','Vancouver','%Bra%')
+-- all the invoices from the billing city Edmonton, and Vancouver and sort in descending order by invoice ID
+SELECT COUNT ("Total"),"InvoiceId" FROM "Invoice"
+WHERE "BillingCity" IN ('Edmonton','Vancouver')
+GROUP BY "InvoiceId"
 ORDER BY "InvoiceId" DESC
 
--- all the customer emails that start with "J" and are from gmail.com.
-select 
-	"CustomerId", "Email"
-from "Customer" 
-where "Email" like 'j%gmail.com';
+-- all the customer emails that start with "J" and are from gmail.com
+SELECT * FROM "Customer"
+WHERE "Email" LIKE 'J%gmail.com'
 
--- a query showing Customers (just their full names, customer ID and country) who are not in the US.
-SELECT
-	CONCAT("FirstName",' ',"LastName") AS "FullName",
-	"CustomerId",
-	"Country"
-FROM "Customer"
-WHERE "Country" NOT IN ('US');
-	
--- A query showing the Invoices of customers who are from Brazil. The resultant table should show the customer's full name, Invoice ID, Date of the invoice and billing country.
-SELECT 
-	CONCAT("FirstName",' ',"LastName") AS "FullName",
-	"BillingCountry",
-	Cu."CustomerId"
-FROM "Invoice" Inv
-JOIN "Customer" Cu
-ON Inv."CustomerId" = Cu."CustomerId"
-WHERE "BillingCountry" IN ('Brazil');
+-- a query showing Customers (just their full names, customer ID and country) who are not in the US
+SELECT CONCAT ("FirstName", ' ',"LastName") AS "FullName","CustomerId","Country" FROM "Customer"
+WHERE "Country" NOT IN ('USA')
+
+-- A query showing the Invoices of customers who are from Brazil. 
+-- The resultant table should show the customer's full name, Invoice ID, Date of the invoice and billing country
+SELECT inv."InvoiceId",inv."InvoiceDate",inv."BillingCountry",CONCAT("FirstName",' ',"LastName") AS "FullName" FROM "Invoice" inv 
+JOIN "Customer" cus ON inv."CustomerId" = cus."CustomerId"
+WHERE "BillingCountry" IN ('Brazil')
 
 --Provide a query showing only the Employees who are Sales Agents
-SELECT *
-FROM "Employee"
-WHERE "Title" LIKE 'Sales Support Agent%'
+SELECT * FROM "Employee"
+WHERE "Title" LIKE '%Sales Support Agent%'
 
--- A query showing a unique list of billing countries from the Invoice table.
-SELECT DISTINCT "BillingCountry"
-FROM "Invoice";
-
+-- query that shows the invoices associated with each sales agent. The resultant table should include the Sales Agent's full name
 SELECT 
-	CONCAT("FirstName",' ',"LastName") AS "FullName",
-	"Title",
-	Cu."CustomerId"
-FROM "Invoice" Inv
-JOIN "Customer" Cu
-ON Inv."CustomerId" = Cu."CustomerId"
-
-SELECT 
-	e."FirstName",' ',"LastName",
-	"Title"
-from "Employee" e
-INNER JOIN "Customer" c 
-ON e."EmployeeId" = c."SupportRepId"
-INNER JOIN "Invoice" i 
-ON c."CustomerId" = i."CustomerId";
-
--- query that shows the invoices associated with each sales agent. The resultant table should include the Sales Agent's full name.
-SELECT
-  e."FirstName" || ' ' || e."LastName" AS "FullName",
-  i."InvoiceId"
-FROM "Employee" as e
-INNER JOIN "Customer" c on e."EmployeeId" = c."SupportRepId"
-INNER JOIN "Invoice" i on c."CustomerId" = i."CustomerId";
+	Emp."FirstName" || ' ' || Emp."LastName" AS "Employee Name",
+	inv."InvoiceId"
+FROM 
+	"Employee" Emp
+JOIN "Customer" Cus
+ON Emp."EmployeeId" = Cus."SupportRepId"
+JOIN "Invoice" inv
+ON Cus."CustomerId" = inv."CustomerId"
 
 -- Provide a query that shows the Invoice Total, Customer name, Country and Sale Agent name for all invoices and customers.
-SELECT
-  e."FirstName" || ' ' || e."LastName" AS "FullName",
-  i."Total",
-  i."InvoiceId",
-  c."Country"
-FROM "Employee" as e
-INNER JOIN "Customer" c on e."EmployeeId" = c."SupportRepId"
-INNER JOIN "Invoice" i on c."CustomerId" = i."CustomerId";
-
--- Looking at the InvoiceLine table, provide a query that COUNTs the number of line items for Invoice ID 37
 SELECT 
-	COUNT("InvoiceLineId")
-FROM "InvoiceLine"
-WHERE "InvoiceId" = 37;
+	Emp."FirstName" || ' ' || Emp."LastName" AS "Employee Name",
+	inv."InvoiceId",
+	inv."Total",
+	Cus."FirstName" || ' ' || Cus."LastName" AS "Customer Name",
+	Cus."Country"	
+FROM 
+	"Employee" Emp
+JOIN "Customer" Cus
+ON Emp."EmployeeId" = Cus."SupportRepId"
+JOIN "Invoice" inv
+ON Cus."CustomerId" = inv."CustomerId"
+
+--  Looking at the InvoiceLine table, provide a query that COUNTs the number of line items for Invoice ID 37
+SELECT COUNT (*) FROM "InvoiceLine"
+WHERE "InvoiceId" = 37
 
 -- A query that includes the purchased track name AND artist name with each invoice line item.
 SELECT 
-	il."InvoiceLineId",
-	Tr."Name" AS "TrackName"
-FROM "InvoiceLine" il
-INNER JOIN "Track" Tr 
-ON il."TrackId" = Tr."TrackId";
+	invl."InvoiceLineId",
+	tr."Name" as "Track Name",
+	ar."Name" as "Artist Name"
+from "InvoiceLine" invl
+join "Track" tr on invl."TrackId" = invl."TrackId"
+join "Album" al on tr."AlbumId" = al."AlbumId"
+join "Artist" ar on al."ArtistId" = ar."ArtistId"
 
---Provide a query that shows the # of invoices per country.
-SELECT
-	"BillingCountry",
-	COUNT("InvoiceId")
+-- Provide a query that shows the # of invoices per country.
+SELECT "BillingCountry",
+COUNT ("InvoiceId") AS "Number of Invoice"
 FROM "Invoice"
 GROUP BY "BillingCountry"
+ORDER BY "Number of Invoice" DESC
 
---a query that shows the total number of tracks in each playlist. The Playlist name should be included on the resultant table.
-SELECT
-  p."Name" as "PlaylistName",
-  COUNT(pt."TrackId") as "NumberOfTracks"
-FROM "Playlist" p
-INNER JOIN "PlaylistTrack" pt on pt."PlaylistId"= p."PlaylistId"
-INNER JOIN "Track" t on t."TrackId"  = pt."TrackId"
-GROUP BY "PlaylistName"
+-- a query that shows the total number of tracks in each playlist. The Playlist name should be included on the resultant table.
+SELECT Pl."Name",COUNT(Tr."TrackId") AS "TotalNumberTracks" FROM "Playlist" Pl
+JOIN "PlaylistTrack" Plt
+ON Pl."PlaylistId" = Plt."PlaylistId"
+JOIN "Track" Tr
+ON Plt."TrackId" = Tr."TrackId"
+GROUP BY Pl."Name"
 
---  a query that shows all the Tracks, but displays no IDs. The resultant table should include the Album name, Media type and Genre.
-SELECT
-  t."Name" as "TrackName",
-  al."Title" as "AlbumName",
-  mt."Name" as "MediaType",
-  g."Name" as "Genre"
-FROM "Track" t
-INNER JOIN "Album" al on al."AlbumId" = t."AlbumId"
-INNER JOIN "Genre" g on g."GenreId"  = t."GenreId"
-INNER JOIN "MediaType" mt on mt."MediaTypeId" = t."MediaTypeId"
+-- a query that shows all the Tracks, but displays no IDs. The resultant table should include the Album name, Media type and Genre.
+SELECT Alb."Title" AS "AlbumName",Mdt."Name" AS "MediaType",Gnr."Name" AS "GenreName" FROM "Track" Tr
+JOIN "MediaType" Mdt
+ON Tr."MediaTypeId" = Mdt."MediaTypeId"
+JOIN "Album" Alb
+ON Tr."AlbumId" = Alb."AlbumId"
+JOIN "Genre" Gnr
+ON Tr."GenreId" = Gnr."GenreId"
 
---A query that shows all Invoices but includes the # of invoice line items.
-SELECT
-  "InvoiceId",
-  COUNT ("InvoiceId") as "NumberInvoiceLineItem"
-FROM "InvoiceLine"
-GROUP BY "InvoiceId"
+-- a query that shows all invoices but includes the number of invoice line items
+SELECT Inv."InvoiceId", COUNT ("InvoiceLineId") AS "NumberofInvoiceLine" FROM "Invoice" Inv
+JOIN "InvoiceLine" Ivl
+ON Inv."InvoiceId" = Ivl."InvoiceId"
+GROUP BY Inv."InvoiceId"
 
--- Provide a query that shows the total sales made by each sales agent.
-SELECT 
-  e.FirstName || " " || e.LastName as EmployeeName,
-  SUM(i.Total) as Sales
-FROM Customer c
-INNER JOIN Employee e on e.EmployeeId = c.SupportRepId
-INNER JOIN Invoice i on i.CustomerId = c.CustomerId
-GROUP BY e.employeeId;
+-- a query that shows total sales made by each agent
+SELECT Emp."FirstName" || ' ' || Emp."LastName" AS "Employee Name",Cus."CustomerId",  Inv."InvoiceId", SUM (Inv."Total") AS"Total Sales"
+FROM "Invoice" Inv
+JOIN "Customer" Cus
+On Inv."CustomerId"= Cus."CustomerId"
+JOIN "Employee" Emp
+ON Cus."SupportRepId" = Emp."EmployeeId"
+GROUP BY Emp."FirstName",Emp."LastName", Cus."CustomerId",Inv."InvoiceId")
 
---Which sales agent made the most in sales in 2009?
-select *, 
-max("total") 
-from
-(select e.*, sum("total") as "Total"
-from "employee" as e
-	join "customer" as c on e."employeeid" = c."supportrepid"
-	join "invoice" as i on i."customerid" = c."customerid"
-where i."invoicedate" between '2010-01-00' and '2010-12-31'
-group by e."employeeid") 
+-- Which sales agent made the most in sales in 2009?
+SELECT "Employee Name",MAX ("Total Sales") AS "Total Sales" FROM 
+	(SELECT Emp."FirstName" || ' ' || Emp."LastName" AS "Employee Name",Cus."CustomerId",  Inv."InvoiceId", SUM (Inv."Total") AS "Total Sales"
+	FROM "Invoice" Inv
+	JOIN "Customer" Cus
+	On Inv."CustomerId"= Cus."CustomerId"
+	JOIN "Employee" Emp
+	ON Cus."SupportRepId" = Emp."EmployeeId"
+	WHERE Inv."InvoiceDate" BETWEEN '2008-01-31' AND '2009-12-31'
+	GROUP BY Emp."FirstName",Emp."LastName", Cus."CustomerId",Inv."InvoiceId") AS Subquery
+GROUP BY "Employee Name"
 
--- Provide a query that shows the top 5 most purchased tracks over all.
-
-SELECT
-  t."Name" as "TrackName",
-  COUNT(il."InvoiceLineId") as "Sold"
-FROM "Invoice" i 
-INNER JOIN "InvoiceLine" il on il."InvoiceId"= i."InvoiceId"
-INNER JOIN "Track" t on t."TrackId" = il."TrackId"
-GROUP BY t."TrackId"
-ORDER BY "Sold" DESC
+-- Provide a query that shows the top 5 most purchased tracks overall.
+SELECT Tra."Name",COUNT (Inv."InvoiceId") AS "Most Purchased Tracks" FROM "Invoice" Inv
+JOIN "InvoiceLine" Invl
+ON Inv."InvoiceId" = Invl."InvoiceId"
+JOIN "Track" Tra
+ON Invl."TrackId" = Tra."TrackId"
+GROUP BY Tra."TrackId"
+ORDER BY "Most Purchased Tracks" DESC
 LIMIT 5
 
 -- Provide a query that shows the top 3 best selling artists.
-
-SELECT
-  ar."Name" as "ArtistName",
-  COUNT(il."TrackId") as "TracksSold",
-  SUM(il."UnitPrice") as "Total"
-FROM "Album" al
-INNER JOIN "Artist" ar on ar."ArtistId" = al."ArtistId"
-INNER JOIN "Track" t on t."AlbumId" = al."AlbumId"
-INNER JOIN "InvoiceLine" il on il."TrackId" = t."TrackId"
-GROUP BY "ArtistName"
+SELECT Art."Name",SUM(Ivl."UnitPrice") AS "Total", COUNT (Tra."TrackId") AS "Track Sold" FROM "Artist" Art
+JOIN "Album" Alb
+ON Art."ArtistId" = Alb."ArtistId"
+JOIN "Track" Tra
+ON Alb."AlbumId" = Tra."AlbumId"
+JOIN "InvoiceLine" Ivl
+ON Tra."TrackId" = Ivl."TrackId"
+GROUP BY Art."Name"
 ORDER BY "Total" DESC
 LIMIT 3
 
---Provide a query that shows the most purchased Media Type.
-
-SELECT
-  "MediaType",
-  MAX("TotalSales")
-FROM
-  (SELECT
-      mt."Name" as "MediaType",
-      SUM(t."UnitPrice") as "TotalSales"
-    FROM "MediaType" mt
-    INNER JOIN "Track" t on t."MediaTypeId" = mt."MediaTypeId"
-    INNER JOIN "InvoiceLine" il on il."TrackId" = t."TrackId"
-    GROUP BY "MediaType"
-  )
-
---A query that shows the number of tracks purchased in all invoices that contain more than one genre.
-SELECT Invoice.InvoiceId AS InvoiceNumber, SUM(InvoiceLine.Quantity) AS TrackCount, group_concat(DISTINCT Genre.Name) AS Genres, COUNT(DISTINCT Genre.Name) AS TotalGenres
- FROM Invoice
- JOIN InvoiceLine ON InvoiceLine.InvoiceId = Invoice.InvoiceId
- JOIN Track ON Track.TrackId = InvoiceLine.TrackId
- JOIN Genre ON Genre.GenreId = Track.GenreId
- GROUP BY InvoiceNumber
- HAVING TotalGenres > 1
+-- Provide a query that shows the most purchased Media Type.
+SELECT "Media Type", MAX ("Most Purchased") AS "Most Purchased Media Type" FROM 
+	(SELECT (Mdt."Name") AS "Media Type",Mdt."MediaTypeId",Tra."TrackId", SUM (Ivl."UnitPrice") AS "Most Purchased",Ivl."InvoiceId" FROM "Track" Tra
+	JOIN "MediaType" Mdt
+	ON Tra."MediaTypeId" = Mdt."MediaTypeId"
+	JOIN "InvoiceLine" Ivl
+	ON Tra."TrackId" = Ivl."TrackId"
+	GROUP BY Mdt."Name",Mdt."MediaTypeId",Tra."TrackId",Ivl."InvoiceId") AS Subquery
+GROUP BY "Media Type"
